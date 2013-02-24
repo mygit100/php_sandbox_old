@@ -2,15 +2,15 @@
 <?php require_once("includes/functions.php"); ?>
 <?php
     if (isset($_GET['subj'])) {
-        $sel_subj = $_GET['subj'];
-        $sel_page = "";
-    } elseif (isset ($_GET['page'])) {
-        $sel_subj = "";
-        $sel_page = $_GET['page'];   
-    } else {
-        $sel_subj = "";
-        $sel_page = "";
-    }
+        $sel_subject = get_subject_by_id($_GET['subj']);
+        $sel_page = NULL;        
+    } elseif (isset ($_GET['page'])) {        
+        $sel_subject = NULL;        
+        $sel_page = get_page_by_id($_GET['page']);
+    } else {        
+        $sel_subject = NULL;        
+        $sel_page = NULL;
+    }    
 ?>
 
 <?php include("includes/header.php"); ?>
@@ -24,7 +24,7 @@
         $subject_set = get_all_subjects();
         while ($subject = mysql_fetch_array($subject_set)) {
             echo "<li";
-            if ($subject["id"] == $sel_subj) {echo " class=\"selected\"";}
+            if ($subject["id"] == $sel_subject['id']) {echo " class=\"selected\"";}
             echo "><a href=\"content.php?subj=" . urlencode($subject["id"]) .
                     "\">{$subject["menu_name"]}</a></li>";  
             
@@ -33,7 +33,7 @@
             echo "<ul class=\"pages\">";
             while ($page = mysql_fetch_array($page_set)) {
                 echo "<li";
-                if ($page["id"] == $sel_page) {echo " class=\"selected\"";}
+                if ($page["id"] == $sel_page['id']) {echo " class=\"selected\"";}
                 echo "><a href=\"content.php?page=" . urlencode($page["id"]) .
                     "\">{$page["menu_name"]}</a></li>";            
             }
@@ -43,9 +43,13 @@
             </ul>
         </td>
         <td id="page">
-            <h2>Content Area</h2>
-            <?php echo $sel_subj; ?><br />
-            <?php echo $sel_page; ?><br />
+            <?php if (!is_null($sel_subject)) { // subject selected ?>
+                <h2><?php echo $sel_subject['menu_name']; ?></h2>
+            <?php } elseif (!is_null($sel_page)) { //page selected ?>
+                <h2><?php echo $sel_page['menu_name']; ?></h2>
+            <?php } else { // nothing selected ?>
+                <h2>Select a subject or page to edit</h2>
+            <?php } ?>
         </td>
     </tr>                
 </table>            
