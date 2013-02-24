@@ -27,4 +27,42 @@
         confirm_query($page_set);
         return $page_set;
     }
+    
+    function get_subject_by_id($subject_id) {
+        global $connection;
+        $query = "SELECT * ";
+        $query .= "FROM subjects ";
+        
+        // Inserted single quotes to make it work
+        $query .= "WHERE id='" . $subject_id ."' ";  
+        $query .= "LIMIT 1";
+        $result_set = mysql_query($query, $connection);
+        confirm_query($result_set);
+        //REMEMBER:
+        // if no rows are returned, fetch_array will return false
+        if ($subject = mysql_fetch_array($result_set)) {
+            return $subject;
+        } else {
+            return NULL;                     
+        }   
+     }    
+          
+    function get_page_by_id($page_id) {
+        global $connection;
+        $query = "SELECT * ";
+        $query .= "FROM pages ";
+        
+        // Inserted single quotes to make it work
+        $query .= "WHERE id='" . $page_id ."' ";  
+        $query .= "LIMIT 1";
+        $result_set = mysql_query($query, $connection);
+        confirm_query($result_set);
+        //REMEMBER:
+        // if no rows are returned, fetch_array will return false
+        if ($page = mysql_fetch_array($result_set)) {
+            return $page;
+        } else {
+            return NULL;                     
+        }   
+     }          
 ?>
